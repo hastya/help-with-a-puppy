@@ -1,0 +1,33 @@
+{
+  "name": "help-with-a-puppy",
+  "version": "1.0.0",
+  "description": "Help with a puppy — веб-приложение для персонализированного ухода, обучения и медицинского сопровождения собак на основе породы и возраста.",
+  "main": "server/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "postinstall": "node scripts/copy-vendor.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "dogs",
+    "pet-care",
+    "puppy",
+    "health",
+    "training",
+    "nutrition"
+  ],
+  "author": "hastya",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.3.0",
+    "chart.js": "^4.4.4",
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

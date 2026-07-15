@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    container_name: help-with-a-puppy
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # CHANGE THIS in production! Generate with:
+      #   node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+      JWT_SECRET: "change-me-to-a-long-random-string"
+      PORT: "3000"
+      DB_PATH: "/app/data/app.db"
+    volumes:
+      # Named volume keeps the SQLite database across container restarts
+      - puppy-data:/app/data
+
+volumes:
+  puppy-data:
