@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#7c9cf0" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>Help with a puppy 🐶</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐶</text></svg>" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* Respect device safe areas (notches, gesture bars) on phones */
+    .shell { padding-top: env(safe-area-inset-top); }
+    .bottom-nav { padding-bottom: env(safe-area-inset-bottom); height: calc(var(--nav-h) + env(safe-area-inset-bottom)); }
+    body { overscroll-behavior-y: contain; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="toast-host"></div>
+  <div id="modal-host"></div>
+
+  <script src="vendor/chart.umd.js"></script>
+  <!-- offline data layer -->
+  <script src="js/calc.js"></script>
+  <script src="js/breeds.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/api-local.js"></script>
+  <!-- shared UI (identical to the web build) -->
+  <script src="js/ui.js"></script>
+  <script src="js/views.js"></script>
+  <script src="js/views-sections.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Register service worker for offline caching when served over http(s).
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(() => {}));
+    }
+  </script>
+</body>
+</html>

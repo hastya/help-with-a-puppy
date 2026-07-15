@@ -1,0 +1,11 @@
+{
+  "appId": "solutions.tracecore.helpwithapuppy",
+  "appName": "Help with a puppy",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

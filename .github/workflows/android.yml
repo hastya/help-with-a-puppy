@@ -1,0 +1,86 @@
+name: Build Android APK
+
+# Builds the standalone offline Android app (Capacitor) and publishes a
+# ready-to-install debug APK to a GitHub Release, so it can be downloaded
+# straight onto a phone.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/android.yml'
+  workflow_dispatch: {}   # allow manual "Run workflow" from the Actions tab
+
+permissions:
+  contents: write          # needed to publish the Release with the APK
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install JS dependencies
+        working-directory: mobile
+        run: npm install
+
+      - name: Sync web assets into the Android project
+        working-directory: mobile
+        run: npx cap sync android
+
+      - name: Build debug APK
+        working-directory: mobile/android
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Rename APK
+        run: |
+          mkdir -p dist
+          cp mobile/android/app/build/outputs/apk/debug/app-debug.apk dist/help-with-a-puppy.apk
+          ls -lh dist
+
+      - name: Upload APK as build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: help-with-a-puppy-apk
+          path: dist/help-with-a-puppy.apk
+          if-no-files-found: error
+
+      # Publish/refresh a stable Release so there is a permanent download link:
+      #   https://github.com/<owner>/<repo>/releases/download/android-latest/help-with-a-puppy.apk
+      - name: Publish APK to a Release
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-latest
+          name: Android APK (latest)
+          body: |
+            📱 **Help with a puppy — Android APK**
+
+            Автономное приложение: работает офлайн, данные хранятся на устройстве.
+
+            **Установка:**
+            1. Скачайте `help-with-a-puppy.apk` на телефон (ссылка ниже).
+            2. Откройте файл и разрешите установку из этого источника.
+            3. Запустите «Help with a puppy» с рабочего стола.
+
+            Собрано автоматически из ветки `main` (debug-сборка, подписана debug-ключом — устанавливается на любой телефон).
+          files: dist/help-with-a-puppy.apk
+          make_latest: true
